@@ -1,6 +1,7 @@
 import datetime
 import json
 import mistune
+import os
 import os.path
 import shutil
 
@@ -19,6 +20,8 @@ PACK_INFO = {
     'pack_format': 2,
     'date': datetime.date.today().isoformat(),
 }
+
+ASEPRITE = os.environ.get('ASEPRITE', 'aseprite')
 
 BUILD_DIR = Path('build')
 WOOD_TYPES = ['oak', 'birch', 'spruce']
@@ -152,7 +155,7 @@ for src in Path('assets').rglob('*.ase'):
         BUILD_DIR/src.with_suffix('.png.mcmeta'))
     @deps(src, *filter(os.path.exists, [src.with_suffix('.ase.json')]))
     def aseprite_export_rule(targets, deps):
-        output = check_output(['aseprite', '-b', deps[0],
+        output = check_output([ASEPRITE, '-b', deps[0],
             '--sheet', targets[0],
             # '--data', dst + '.json',
             '--sheet-type', 'columns',
