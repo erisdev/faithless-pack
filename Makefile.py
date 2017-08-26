@@ -13,7 +13,7 @@ from metapack.mods import ModRules
 
 PACK_INFO = {
     'name': "FAITHLESS",
-    'version': "0.0.1",
+    'version': "0.1.0",
     'description': "so early it's a phoenician aleph release",
 
     'pack_format': 2,
