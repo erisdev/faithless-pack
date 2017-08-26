@@ -285,7 +285,7 @@ def main(filename, target):
         print(ex)
         return 1
     except RuleExecutionError as ex:
-        print(f"an exception occurred while making {ex.target}:")
+        print(f"an exception occurred while making {ex.rule.targets[0]}:")
         print(*ex.info.format())
         return 1
 
