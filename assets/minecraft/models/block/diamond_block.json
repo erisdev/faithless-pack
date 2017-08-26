@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_top",
+  "textures": {
+    "top": "blocks/storage/diamond_top",
+    "side": "blocks/diamond_block"
+  }
+}

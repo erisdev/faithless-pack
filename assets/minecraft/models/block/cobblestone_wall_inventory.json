@@ -1,0 +1,8 @@
+{
+  "parent": "block/wall_inventory",
+  "textures": {
+    "wall": "blocks/wall/cobblestone_wall_side",
+    "top": "blocks/wall/cobblestone_wall_top",
+    "post": "blocks/wall/cobblestone_post"
+  }
+}

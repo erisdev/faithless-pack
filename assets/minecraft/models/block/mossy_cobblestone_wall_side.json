@@ -1,0 +1,7 @@
+{
+  "parent": "block/wall_side",
+  "textures": {
+    "wall": "blocks/wall/mossy_wall_side",
+    "top": "blocks/wall/mossy_wall_top"
+  }
+}

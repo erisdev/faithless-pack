@@ -1,0 +1,7 @@
+{
+  "parent": "block/wall_post",
+  "textures": {
+    "wall": "blocks/wall/cobblestone_post",
+    "top": "blocks/wall/cobblestone_wall_top"
+  }
+}

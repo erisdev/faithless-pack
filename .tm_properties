@@ -1,0 +1,4 @@
+exclude = {$exclude,build}
+
+[ *.mcmeta ]
+type    = source.json

@@ -1,0 +1,27 @@
+{
+  "__comment": "Fair warning, this format is highly likely to change even more in the future!",
+  "variants": {
+    "half=bottom": [
+      { "model": "half_slab_brick", "weight": 75 },
+      { "model": "half_slab_brick/1", "weight": 3.125 },
+      { "model": "half_slab_brick/2", "weight": 3.125 },
+      { "model": "half_slab_brick/3", "weight": 3.125 },
+      { "model": "half_slab_brick/4", "weight": 3.125 },
+      { "model": "half_slab_brick/5", "weight": 3.125 },
+      { "model": "half_slab_brick/6", "weight": 3.125 },
+      { "model": "half_slab_brick/7", "weight": 3.125 },
+      { "model": "half_slab_brick/8", "weight": 3.125 }
+		],
+		"half=top": [
+      { "model": "upper_slab_brick", "weight": 75 },
+      { "model": "upper_slab_brick/1", "weight": 3.125 },
+      { "model": "upper_slab_brick/2", "weight": 3.125 },
+      { "model": "upper_slab_brick/3", "weight": 3.125 },
+      { "model": "upper_slab_brick/4", "weight": 3.125 },
+      { "model": "upper_slab_brick/5", "weight": 3.125 },
+      { "model": "upper_slab_brick/6", "weight": 3.125 },
+      { "model": "upper_slab_brick/7", "weight": 3.125 },
+      { "model": "upper_slab_brick/8", "weight": 3.125 }
+		]
+  }
+}

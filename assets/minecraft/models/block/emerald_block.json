@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_top",
+  "textures": {
+    "top": "blocks/storage/emerald_top",
+    "side": "blocks/emerald_block"
+  }
+}

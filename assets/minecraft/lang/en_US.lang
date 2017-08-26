@@ -1,0 +1,16 @@
+enchantment.level.1=Lv.1
+enchantment.level.2=Lv.2
+enchantment.level.3=Lv.3
+enchantment.level.4=Lv.4
+enchantment.level.5=Lv.5
+enchantment.level.6=Lv.6
+enchantment.level.7=Lv.7
+enchantment.level.8=Lv.8
+enchantment.level.9=Lv.9
+enchantment.level.10=Lv.X
+
+tile.hellrock.name=Nethergut
+tile.hellsand.name=Soul Squirm
+# tile.netherBrick.name=Nethergut Brick
+# tile.netherFence.name=Nethergut Brick Fence
+# tile.stairsNetherBrick.name=Nethergut Brick Stairs

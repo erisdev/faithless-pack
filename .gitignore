@@ -1,0 +1,7 @@
+# build products
+/build
+*.zip
+
+# filesystem dust
+.DS_Store
+__pycache__

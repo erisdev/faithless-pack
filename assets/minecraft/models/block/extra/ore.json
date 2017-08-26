@@ -1,0 +1,32 @@
+{
+  "parent": "block/block",
+  "ambientocclusion": false,
+  "textures": {
+    "stone": "blocks/stone"
+  },
+  "elements": [
+    { "from": [ 0, 0, 0 ],
+      "to": [ 16, 16, 16 ],
+      "faces": {
+        "down":  { "texture": "#stone", "cullface": "down", "tintindex": 100 },
+        "up":    { "texture": "#stone", "cullface": "up", "tintindex": 100 },
+        "north": { "texture": "#stone", "cullface": "north", "tintindex": 100 },
+        "south": { "texture": "#stone", "cullface": "south", "tintindex": 100 },
+        "west":  { "texture": "#stone", "cullface": "west", "tintindex": 100 },
+        "east":  { "texture": "#stone", "cullface": "east", "tintindex": 100 }
+      }
+    },
+    { "from": [ 0, 0, 0 ],
+      "to": [ 16, 16, 16 ],
+      "shade": false,
+      "faces": {
+        "down":  { "texture": "#ore", "cullface": "down", "tintindex": 101 },
+        "up":    { "texture": "#ore", "cullface": "up", "tintindex": 101 },
+        "north": { "texture": "#ore", "cullface": "north", "tintindex": 101 },
+        "south": { "texture": "#ore", "cullface": "south", "tintindex": 101 },
+        "west":  { "texture": "#ore", "cullface": "west", "tintindex": 101 },
+        "east":  { "texture": "#ore", "cullface": "east", "tintindex": 101 }
+      }
+    }
+  ]
+}
