@@ -238,8 +238,7 @@ class Makefile(object):
 
         queue = collect(target)
         if not queue:
-            print(f"nothing to do for {target}")
-            return
+            return False
 
         progress = progressbar.ProgressBar(
             redirect_stdout=True,
@@ -255,39 +254,77 @@ class Makefile(object):
                 rule.execute()
                 progress.update(i + 1)
 
+        return True
+
 # -------------------------------
 import click
 
-@click.command()
+class PancakeCommand(click.Group):
+    def get_command(self, ctx, name):
+        cmd = super().get_command(ctx, name)
+        if cmd:
+            return cmd
+        else:
+            @click.command(
+                context_settings=dict(
+                    ignore_unknown_options=True,
+                    allow_extra_args=True))
+            def _cmd():
+                ctx.invoke(make, target=name)
+            return _cmd
+
+@click.group(
+    cls=PancakeCommand,
+    invoke_without_command=True)
 @click.option('-F', 'filename',
     help="file to load rules from",
     default='Makefile.py',
     show_default=True,
     type=click.Path(exists=True))
+@click.pass_context
+def pancake(ctx, filename):
+    makefile = Makefile()
+    makefile.load(filename)
+    ctx.obj = makefile
+    if not ctx.invoked_subcommand:
+        ctx.invoke(make)
+
+@pancake.command(
+    help="run a task (default)")
 # @click.option('-w', '--watch',
 #     help="watch for changes to any files in the dependency tree and automatically re-run when they occur",
 #     is_flag=True)
 @click.argument('target', default='default')
-def main(filename, target):
-    makefile = Makefile()
-    makefile.load(filename)
-
-    @rule(makefile)
-    def crash():
-        crash_calls()
-
-    def crash_calls():
-        this_causes_an_error
-
+@click.pass_context
+def make(ctx, target):
+    makefile = ctx.obj
     try:
-        makefile.invoke(target)
+        made = makefile.invoke(target)
     except MakeError as ex:
-        print(ex)
-        return 1
+        ctx.fail(ex)
     except RuleExecutionError as ex:
-        print(f"an exception occurred while making {ex.rule.targets[0]}:")
-        print(*ex.info.format())
-        return 1
+        ctx.fail('\n',join([
+            f"something went wrong while making {ex.rule.targets[0]}:",
+            *ex.info.format()
+        ]))
+    else:
+        if not made:
+            click.echo(f"nothing to do for {target}")
+
+@pancake.command(
+    help="list rules defined by the build script")
+@click.option('-a', 'list_all',
+    help="include file rules in the listing",
+    is_flag=True)
+@click.pass_context
+def list_rules(ctx, list_all):
+    makefile = ctx.obj
+    default = makefile.default_rule()
+    for rule in set(makefile.rules.values()):
+        if rule == default:
+            print(f"{rule.targets[0]} (default)")
+        elif list_all or not isinstance(rule, FileRule):
+            print(f"{rule.targets[0]}")
 
 if __name__ == '__main__':
-    main()
+    pancake()
