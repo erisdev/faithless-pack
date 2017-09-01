@@ -149,7 +149,8 @@ def _if_exists(filename):
     else:
         return None
 
-for src in Path('assets').rglob('*.ase'):
+@match('assets/*/textures/**/*.ase')
+def texture_matcher(src):
     @export_textures.depends_on
     @rule(BUILD_DIR/src.with_suffix('.png'),
         BUILD_DIR/src.with_suffix('.png.mcmeta'))
@@ -177,9 +178,10 @@ for src in Path('assets').rglob('*.ase'):
 def copy_files():
     pass
 
-SKIP_FILES = ('.DS_Store', '*.ase', '*.ase.json')
-for src in Path('assets').rglob('*'):
-    if src.is_file() and not any(filter(src.match, SKIP_FILES)):
+@match('assets/**/*')
+@exclude('.DS_Store', '*.ase', '*.ase.json')
+def file_matcher(src):
+    if src.is_file():
         @copy_files.depends_on
         @rule(BUILD_DIR/src)
         @deps(src)

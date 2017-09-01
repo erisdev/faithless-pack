@@ -7,6 +7,8 @@ import sys
 import time
 import traceback
 
+from pathlib import Path
+
 class RuleExecutionError(RuntimeError):
     def __init__(self, rule, ex_type, ex_value, stack):
         self.rule = rule
@@ -108,7 +110,8 @@ class FileRule(Rule):
     a file rule is considered out of date if any of its targets are older than the makefile *or* any of the rule's dependencies.
     """
 
-    @classtools.reify
+    # @classtools.reify
+    @property
     def mtime(self):
         """check the modification time of all targets and return the oldest."""
         return min(map(_mtime, self.targets))
@@ -127,13 +130,54 @@ class FileRule(Rule):
                 return False
 
     def execute(self):
-        try:
-            del self.mtime
-        except AttributeError:
-            pass
+        # try:
+        #     del self.mtime
+        # except AttributeError:
+        #     pass
         for t in self.targets:
             os.makedirs(os.path.dirname(t), exist_ok=True)
         super().execute()
+
+class SourceFileRule(FileRule):
+    """a rule that represents a single source file.
+
+    a source file is never out of date because it does not depend on any other files.
+    """
+    def __init__(self, makefile, filename):
+        super().__init__(makefile, [filename], [], None)
+
+    @property
+    def trivial(self):
+        return True
+
+    def should(self):
+        return False
+
+    def execute(self):
+        pass
+
+class FileMatcher(object):
+    def __init__(self, makefile, pattern, exclude, callback):
+        self.makefile = makefile
+        self.pattern = pattern
+        self.callback = callback
+
+        self.exclude = []
+        self.exclude.extend(exclude)
+
+    def match(self, filename):
+        return filename.match(self.pattern) \
+            and not any(filter(filename.match, self.exclude))
+
+    def process_file(self, filename):
+        filename = Path(filename)
+        if self.match(filename):
+            self.callback(filename)
+
+    def process_all(self):
+        for filename in Path().glob(self.pattern):
+            if self.match(filename):
+                self.callback(filename)
 
 # -------------------------------
 import functools
@@ -168,6 +212,24 @@ def bind_params(makefile, **params):
         return functools.partial(f, **params)
     return decorator
 
+def match(makefile, pattern):
+    """create a new file matcher"""
+    def decorator(f):
+        exclude = getattr(f, '__make_exclude__', [])
+        matcher = FileMatcher(makefile, pattern, exclude, f)
+        makefile.add_matcher(matcher)
+        return matcher
+    return decorator
+
+def exclude(makefile, *patterns):
+    """attach a list of excluded patterns to the file matcher"""
+    def decorator(f):
+        if not hasattr(f, '__make_exclude__'):
+            f.__make_exclude__ = []
+        f.__make_exclude__.extend(map(str, filter(None, patterns)))
+        return f
+    return decorator
+
 # -------------------------------
 import functools
 import progressbar
@@ -175,18 +237,24 @@ import time
 
 from collections import OrderedDict
 
+try:
+    from watchdog.observers import Observer
+    from watchdog.events import PatternMatchingEventHandler, FileSystemEventHandler
+except ModuleNotFoundError:
+    have_watchdog = False
+else:
+    have_watchdog = True
+
 class MakeError(RuntimeError):
     pass
 
-def _dummy_rule():
-    pass
-
-decorators = [rule, deps, bind_params]
+decorators = [rule, deps, bind_params, match, exclude]
 
 class Makefile(object):
     def __init__(self):
         self.mtime = 0
         self.rules = OrderedDict()
+        self.matchers = []
         self._injected_locals = {'makefile':self}
         self._injected_locals.update(
             {f.__name__:functools.partial(f, self) for f in decorators})
@@ -201,13 +269,17 @@ class Makefile(object):
         for target in rule.targets:
             self.rules[target] = rule
 
+    def add_matcher(self, matcher):
+        self.matchers.append(matcher)
+        matcher.process_all()
+
     def lookup_rule(self, target):
         if target in self.rules:
             return self.rules[target]
         elif target == 'default':
             return self.default_rule()
         elif os.path.exists(target):
-            rule = FileRule(self, [target], [], _dummy_rule)
+            rule = SourceFileRule(self, target)
             self.add_rule(rule)
             return rule
         else:
@@ -220,14 +292,19 @@ class Makefile(object):
         else:
             raise MakeError("there are no rules")
 
-    def invoke(self, target='default'):
-        queue = OrderedDict()
+    def invoke(self, target='default', watch=False):
+        if watch:
+            return self._watch(target)
+        else:
+            queue = self._collect(target)
+            return self._invoke_queue(queue)
 
+    def _collect(self, target):
         def collect(target, queue=OrderedDict(), chain=OrderedDict()):
             rule = self.lookup_rule(target)
             if rule in chain:
                 raise MakeError("cyclical dependency detected")
-            elif rule.should():
+            else:
                 queue[rule] = True
                 queue.move_to_end(rule)
                 chain[rule] = True
@@ -235,8 +312,36 @@ class Makefile(object):
                     collect(dep, queue, chain)
                 chain.popitem(last=True)
             return queue
+        return list(reversed(collect(target)))
 
-        queue = collect(target)
+    def _watch(self, target):
+        queue = self._collect(target)
+        observer = Observer()
+
+        def on_created(event):
+            nonlocal queue
+            for matcher in self.matchers:
+                matcher.process_file(event.src_path)
+            queue = self._collect(target)
+
+        def on_modified(event):
+            rule = self.lookup_rule(event.src_path)
+            if isinstance(rule, SourceFileRule):
+                self._invoke_queue(queue)
+
+        handler = FileSystemEventHandler()
+        handler.on_created = on_created
+        handler.on_modified = on_modified
+        observer.schedule(handler, '.', recursive=True)
+
+        self._invoke_queue(queue)
+
+        observer.start()
+        observer.join()
+        return True
+
+    def _invoke_queue(self, queue):
+        queue = list(filter(lambda rule: rule.should(), queue))
         if not queue:
             return False
 
@@ -249,7 +354,7 @@ class Makefile(object):
                 progressbar.AdaptiveETA(),
             ])
         with progress:
-            for i, rule in enumerate(reversed(queue)):
+            for i, rule in enumerate(queue):
                 print(f"=> {rule.targets[0]}")
                 rule.execute()
                 progress.update(i + 1)
@@ -282,24 +387,24 @@ class PancakeCommand(click.Group):
     show_default=True,
     type=click.Path(exists=True))
 @click.pass_context
-def pancake(ctx, filename):
+def pancake_cli(ctx, filename):
     makefile = Makefile()
     makefile.load(filename)
     ctx.obj = makefile
     if not ctx.invoked_subcommand:
         ctx.invoke(make)
 
-@pancake.command(
+@pancake_cli.command(
     help="run a task (default)")
-# @click.option('-w', '--watch',
-#     help="watch for changes to any files in the dependency tree and automatically re-run when they occur",
-#     is_flag=True)
+@click.option('-w', '--watch',
+    help="watch for changes to any files in the dependency tree and automatically re-run when they occur",
+    is_flag=True)
 @click.argument('target', default='default')
 @click.pass_context
-def make(ctx, target):
+def make(ctx, target, watch):
     makefile = ctx.obj
     try:
-        made = makefile.invoke(target)
+        made = makefile.invoke(target, watch=watch)
     except MakeError as ex:
         ctx.fail(ex)
     except RuleExecutionError as ex:
@@ -311,7 +416,7 @@ def make(ctx, target):
         if not made:
             click.echo(f"nothing to do for {target}")
 
-@pancake.command(
+@pancake_cli.command(
     help="list rules defined by the build script")
 @click.option('-a', 'list_all',
     help="include file rules in the listing",
@@ -327,4 +432,4 @@ def list_rules(ctx, list_all):
             print(f"{rule.targets[0]}")
 
 if __name__ == '__main__':
-    pancake()
+    pancake_cli()
