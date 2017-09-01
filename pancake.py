@@ -1,6 +1,36 @@
 # -------------------------------
+from fnmatch import fnmatch
+from pathlib import Path
+
+def pathmatch(filename, pattern, partial=False):
+    """test if a path matches a glob pattern.
+
+    this function substitute for Path.match because Path.match doesn't correctly handle ** in the middle of a pattern (are you serious)."""
+    f = tuple(reversed(Path(filename).parts))
+    p = tuple(reversed(Path(pattern).parts))
+    return _pathmatch(f, p, partial)
+
+def _pathmatch(f, p, partial):
+    if len(p) == 0:
+        return partial or len(f) == 0
+    elif len(f) == 0:
+        return False
+    elif p[0] == '**':
+        p_rest = p[1:]
+        for i in range(len(f)):
+            if _pathmatch(f[i:], p_rest, partial):
+                return True
+        return False
+    elif fnmatch(f[0], p[0]):
+        return _pathmatch(f[1:], p[1:], partial)
+    else:
+        return False
+
+# -------------------------------
 import abc
 import classtools
+import functools
+import glob
 import inspect
 import os.path
 import sys
@@ -166,8 +196,8 @@ class FileMatcher(object):
         self.exclude.extend(exclude)
 
     def match(self, filename):
-        return filename.match(self.pattern) \
-            and not any(filter(filename.match, self.exclude))
+        return pathmatch(filename, self.pattern) \
+            and not any(filter(functools.partial(pathmatch, filename, partial=True), self.exclude))
 
     def process_file(self, filename):
         filename = Path(filename)
@@ -175,9 +205,8 @@ class FileMatcher(object):
             self.callback(filename)
 
     def process_all(self):
-        for filename in Path().glob(self.pattern):
-            if self.match(filename):
-                self.callback(filename)
+        for filename in glob.iglob(self.pattern, recursive=True):
+            self.process_file(filename)
 
 # -------------------------------
 import functools
