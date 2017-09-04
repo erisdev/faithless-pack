@@ -10,6 +10,7 @@ from subprocess import check_output
 from zipfile import ZipFile
 
 from metapack.candy import singleton
+from metapack.glitchtex import glitch
 from metapack.mods import ModRules
 
 PACK_INFO = {
@@ -85,7 +86,7 @@ class mekanism(ModRules):
 #             checklist(filename)
 
 @rule()
-@deps('generate_models', 'export_textures', 'copy_files', 'build/pack.mcmeta')
+@deps('generate_models', 'export_textures', 'bedrock', 'copy_files', 'build/pack.mcmeta')
 def build():
     pass
 
@@ -173,6 +174,31 @@ def texture_matcher(src):
         aseprite_to_mcmeta(json.loads(output), mcmeta)
         with open(targets[1], 'w') as f:
             json.dump(mcmeta, f)
+
+@rule()
+@deps('export_textures')
+def bedrock():
+    pass
+    # texture_path = BUILD_DIR/'assets/minecraft/textures/blocks'
+    # os.makedirs(texture_path/'bedrock', exist_ok=True)
+    # for idx in range(16):
+    #     filename = texture_path / f'bedrock/{idx:02x}.png'
+    #     glitch(filename, list(filter(lambda p: p.endswith('.png'), export_textures.deps)))
+
+def make_bedrock_rules():
+    texture_path = BUILD_DIR/'assets/minecraft/textures/blocks'
+    def make_bedrock_texture_rule(idx):
+        @bedrock.depends_on
+        @rule(texture_path / f'bedrock/{idx:02x}.png')
+        def bedrock_rule(target):
+            tile_list = list(filter(
+                lambda p: p.endswith('.png'),
+                export_textures.deps))
+            glitch(target, tile_list)
+
+    for idx in range(16):
+        make_bedrock_texture_rule(idx)
+make_bedrock_rules()
 
 @rule()
 def copy_files():

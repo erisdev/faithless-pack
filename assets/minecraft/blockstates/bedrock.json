@@ -1,5 +1,22 @@
 {
-    "variants": {
-        "normal": { "model": "bedrock" }
-    }
+  "variants": {
+    "normal": [
+      { "model": "bedrock/00" },
+      { "model": "bedrock/01" },
+      { "model": "bedrock/02" },
+      { "model": "bedrock/03" },
+      { "model": "bedrock/04" },
+      { "model": "bedrock/05" },
+      { "model": "bedrock/06" },
+      { "model": "bedrock/07" },
+      { "model": "bedrock/08" },
+      { "model": "bedrock/09" },
+      { "model": "bedrock/0a" },
+      { "model": "bedrock/0b" },
+      { "model": "bedrock/0c" },
+      { "model": "bedrock/0d" },
+      { "model": "bedrock/0e" },
+      { "model": "bedrock/0f" }
+    ]
+  }
 }
