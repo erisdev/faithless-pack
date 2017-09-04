@@ -437,7 +437,7 @@ def make(ctx, target, watch):
     except MakeError as ex:
         ctx.fail(ex)
     except RuleExecutionError as ex:
-        ctx.fail('\n',join([
+        ctx.fail('\n'.join([
             f"something went wrong while making {ex.rule.targets[0]}:",
             *ex.info.format()
         ]))
