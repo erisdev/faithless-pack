@@ -1,0 +1,17 @@
+{
+    "multipart": [
+        {   "apply": { "model": "iron_bars_post" }},
+        {   "when": { "north": true },
+            "apply": { "model": "iron_bars_side", "y": 0, "uvlock": true }
+        },
+        {   "when": { "east": true },
+            "apply": { "model": "iron_bars_side", "y": 90, "uvlock": true }
+        },
+        {   "when": { "south": true },
+            "apply": { "model": "iron_bars_side", "y": 180, "uvlock": true }
+        },
+        {   "when": { "west": true },
+            "apply": { "model": "iron_bars_side", "y": 270, "uvlock": true }
+        }
+    ]
+}

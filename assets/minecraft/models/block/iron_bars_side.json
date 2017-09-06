@@ -1,0 +1,92 @@
+{
+	"credit": "Made with Blockbench, a free, modern block model editor by JannisX11",
+	"textures": {
+		"top": "blocks/iron_bars/top",
+    "bottom": "blocks/iron_bars/bottom",
+		"bars": "blocks/iron_bars",
+    "particle": "blocks/iron_bars"
+	},
+	"elements": [
+		{
+			"name": "Cube",
+			"from": [7, 1, 2],
+			"to": [9, 15, 4],
+			"faces": {
+				"north": {"uv": [2, 1, 4, 15], "texture": "#bars"},
+				"east": {"uv": [2, 1, 4, 15], "texture": "#bars"},
+				"south": {"uv": [2, 1, 4, 15], "texture": "#bars"},
+				"west": {"uv": [2, 1, 4, 15], "texture": "#bars"}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [7, 15, 0],
+			"to": [9, 16, 7],
+			"faces": {
+				"north": {"uv": [14, 0, 16, 1], "texture": "#bars"},
+				"east": {"uv": [9, 0, 16, 1], "texture": "#bars"},
+				"south": {"uv": [0, 0, 2, 1], "texture": "#bars"},
+				"west": {"uv": [0, 0, 7, 1], "texture": "#bars"},
+				"up": {
+					"uv": [0, 7, 7, 9],
+					"texture": "#top",
+					"rotation": 90
+				},
+				"down": {
+					"uv": [0, 7, 7, 9],
+					"texture": "#bottom",
+					"rotation": 90
+				}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [7, 0, 0],
+			"to": [9, 1, 7],
+			"faces": {
+				"north": {
+					"uv": [14, 15, 16, 16],
+					"texture": "#bars"
+				},
+				"east": {"uv": [9, 15, 16, 16], "texture": "#bars"},
+				"south": {"uv": [0, 15, 2, 16], "texture": "#bars"},
+				"west": {"uv": [0, 15, 7, 16], "texture": "#bars"},
+				"up": {
+					"uv": [0, 7, 7, 9],
+					"texture": "#top",
+					"rotation": 90
+				},
+				"down": {
+					"uv": [0, 7, 7, 9],
+					"texture": "#bottom",
+					"rotation": 90
+				}
+			}
+		},
+		{
+			"name": "Cube",
+			"from": [7, 7, 0],
+			"to": [9, 9, 7],
+			"faces": {
+				"north": {"uv": [14, 7, 16, 9], "texture": "#bars"},
+				"east": {"uv": [9, 7, 16, 9], "texture": "#bars"},
+				"south": {"uv": [0, 7, 2, 9], "texture": "#bars"},
+				"west": {"uv": [0, 7, 7, 9], "texture": "#bars"},
+				"up": {
+					"uv": [0, 7, 7, 9],
+					"texture": "#top",
+					"rotation": 90
+				},
+				"down": {
+					"uv": [0, 7, 7, 9],
+					"texture": "#bottom",
+					"rotation": 90
+				}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {"scale": [1, 1, 1]}
+	},
+	"ambientocclusion": false
+}
