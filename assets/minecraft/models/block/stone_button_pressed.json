@@ -1,6 +1,7 @@
 {
     "parent": "block/button_pressed",
     "textures": {
-        "texture": "blocks/button/stone"
+        "texture": "blocks/button/stone",
+        "particle": "blocks/stone"
     }
 }

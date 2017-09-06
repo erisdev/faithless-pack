@@ -4,7 +4,7 @@
 		"base": "blocks/lever/base",
 		"lever": "blocks/lever",
 		"handle": "blocks/lever/handle",
-		"particle": "blocks/lever/base"
+		"particle": "blocks/cobblestone"
 	},
 	"elements": [
 		{
