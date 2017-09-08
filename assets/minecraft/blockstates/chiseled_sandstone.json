@@ -1,0 +1,12 @@
+{
+    "variants": {
+        "normal": [
+          { "model": "sandstone_chiseled" },
+          { "model": "sandstone_chiseled/nwn" },
+          { "model": "sandstone_chiseled/ono" },
+          { "model": "sandstone_chiseled/owo" },
+          { "model": "sandstone_chiseled/unu" },
+          { "model": "sandstone_chiseled/uwu" }
+        ]
+    }
+}
