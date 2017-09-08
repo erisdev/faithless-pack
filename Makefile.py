@@ -15,8 +15,8 @@ from metapack.mods import ModRules
 
 PACK_INFO = {
     'name': "FAITHLESS",
-    'version': "0.1.0",
-    'description': "so early it's a phoenician aleph release",
+    'version': "0.2.0",
+    'description': "it's not faithful, but who cares?",
 
     'pack_format': 2,
     'date': datetime.date.today().isoformat(),

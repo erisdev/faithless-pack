@@ -63,6 +63,14 @@ python pancake.py
 for other errors, make sure you have all the requirements installed! i won't help you troubleshoot build errors because this setup is custom built primarily for my own convenience. if you're still having trouble, just [download a release][releases].
 
 ## HISTORY
+### 0.2 – 2017-09-07
+
+the main attraction here is the new bright & colorful wool & stained clay textures by Q-LUM. the colors are based on the world of color update's improved color palette.
+
+the second big thing (in my imo) is the new bedrock textures. 16 glitch textures, randomly generated each new release from existing textures. cool, right?
+
+also new in this release: a lot of miscellaneous shit including oak & steel doors, red sand, chiseled sandstone, beds.... just check out the commit log for more info.
+
 ### 0.1 – 2017-08-25
 
 first release. very unfinished.
