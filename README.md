@@ -1,6 +1,6 @@
 # FAITHLESS
 
-i wanted to make a new texture pack. [my friend][Q-LUM] is helping.
+i wanted to make a new texture pack. [my friend][cube] is helping.
 
 we play on a server that runs minecraft 1.10, so that's the version FAITHLESS supports.
 
@@ -65,7 +65,7 @@ for other errors, make sure you have all the requirements installed! i won't hel
 ## HISTORY
 ### 0.2 – 2017-09-07
 
-the main attraction here is the new bright & colorful wool & stained clay textures by Q-LUM. the colors are based on the world of color update's improved color palette.
+the main attraction here is the new bright & colorful wool & stained clay textures by cube. the colors are based on the world of color update's improved color palette.
 
 the second big thing (in my imo) is the new bedrock textures. 16 glitch textures, randomly generated each new release from existing textures. cool, right?
 
@@ -78,17 +78,15 @@ first release. very unfinished.
 many of the blocks here were based on the original 32×32 textures from my previous attempt at a texture pack. water, lava and nether portal textures are lifted straight from that pack totally unaltered except for some palette tweaks.
 
 ## CREDITS
-### [eris][]
+### riley
 
 that's me! any textures otherwise uncredited are probably my doing.
 
-### [Q-LUM][]
+### [cube][]
 
 * ingots, ores & metal blocks
 * soul ~~sand~~ squirm
 * general color advice
-
-they're also working on a sci-fi webcomic called [electrum][] that you should definitely read.
 
 ## LICENSE
 
@@ -113,8 +111,6 @@ what this means is that **you are free to**
 
 [aseprite]: https://www.aseprite.org
 [BY-NC-SA]: http://creativecommons.org/licenses/by-nc-sa/2.0/
-[electrum]: https://electrum.cubemelon.net
-[eris]: https://twitter.com/devouringmother
 [install guide]: https://minecraft.gamepedia.com/Tutorials/Loading_a_resource_pack
-[Q-LUM]: https://twitter.com/electrumcube
+[cube]: https://twitter.com/electrumcube
 [releases]: https://github.com/erisdev/faithless-pack/releases
